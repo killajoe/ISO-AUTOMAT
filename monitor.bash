@@ -18,7 +18,7 @@ LoadAverage() {
 Main() {
     local kernelrelease=$(uname -r)
     local ramusage=$(RamUsage)
-    local cpuusage=$(/home/joekamprad/.local/bin/cpu)
+    local cpuusage=$($HOME/.local/bin/cpu)
     local loadaverage=$(LoadAverage)
     local uptime=$(uptime -p)
     local updates=$(checkupdates)
