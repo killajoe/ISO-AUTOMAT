@@ -37,10 +37,9 @@ Main() {
         "<center>"
 
         # Check Kernel Release
-
         "<b>Kernel Release</b>:"
         "<br>"
-        "$kernelrelease"
+        " $kernelrelease"
         "<br>"
         "<br>"
 
@@ -54,7 +53,7 @@ Main() {
         # cpu usage
         "<b>CPU usage</b>:"
         "<br>"
-        "$cpuusage"
+        " $cpuusage"
         "<br>"
         "<br>"
 
@@ -66,7 +65,6 @@ Main() {
         "<br>"
 
         # Check System Uptime
-
         "<b>System Uptime</b>:"
         "<br>"
         " $uptime"
@@ -74,20 +72,19 @@ Main() {
         "<br>"
 
         # Check updates
-
         "<b>checkupdates</b>:"
         "<br>"
         " $updates"
         "<br>"
         "<br>"
 
-
         # fun quote
         "<b>Quote of the minute</b>:<br>"
-        "$quote"
+        " $quote"
         "<br>"
         "<br>"
         "<img src="http://endeavouros.sytes.net/images/eos-rocket-small.png" alt="eos" />"
+        
         "</center>"
         "</BODY>"
         "</HTML>"
