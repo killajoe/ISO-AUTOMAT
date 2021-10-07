@@ -1,0 +1,36 @@
+#/bin/bash
+
+Main() {
+    # Set up for backups
+
+    local date=$(date +%Y.%m.%d)           # must not contain spaces inside the date string!
+    local targetdir=/mnt/backup/github
+    if [ ! -d $targetdir ] ; then
+        targetdir=$HOME/github-backup      # a fallback target folder
+    fi
+    if [ ! -d $targetdir ] ; then
+        echo "Error: target folder '$targetdir' does not exist." >&2
+        exit 1
+    fi
+    local target=$targetdir/$date
+    local GHORG=endeavouros-team
+
+    mkdir -p $target
+    cd $target
+
+    # Create a backup
+
+    curl "https://api.github.com/orgs/$GHORG/repos?per_page=1000" | grep -o 'git@[^"]*' | xargs -L1 git clone
+    echo "$date" >> $targetdir/log.txt
+
+    # Delete older backups
+
+    cd $targetdir
+    local keep_count=2                                           # how many latest folders you want to keep?
+    local deletable="$(/usr/bin/ls -1 | head -n -$keep_count)"
+    if [ -n "$deletable" ] ; then
+        rm -rf $deletable
+    fi
+}
+
+Main "$@"
