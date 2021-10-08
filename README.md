@@ -21,8 +21,6 @@ script to backup all repositories from your GitHub (organisation or user) creati
 
 `./github-repo-backup --help` for info about options.
 
-script needs to set up user can access GitHub without password prompting:
-
 you need to setup your github user locally for passwordless login :wink:
 easiest way is to create a .netrc file with your token:
 
