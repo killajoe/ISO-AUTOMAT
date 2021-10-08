@@ -3,9 +3,9 @@ scripts for the ISO-AUTOMAT
 
 Feel free to help on making them better !
 
-## Pull Requests Welcome !
+# Pull Requests Are Welcome :wink:
 
-# monitor.bash
+## monitor.bash
 
 simply creating a html webside for showing status of the server.
 
@@ -17,7 +17,7 @@ to update the page create a simple systemd timer.
 
 <img src="https://raw.githubusercontent.com/killajoe/ISO-AUTOMAT/main/iso-automat-stat.png" width="450">
 
-# github-repo-backup
+## github-repo-backup
 
 script to backup all repositories from your GitHub (organisation or user) creating snapshots and sheduled removing oldes one.
 
