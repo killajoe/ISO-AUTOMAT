@@ -30,7 +30,7 @@ easiest way is to create a .netrc file with your token:
 
 ```
 machine github.com
-       login eosbuilder
+       login username
        password your-github-secret-token
 ```
 
@@ -39,7 +39,7 @@ and set github local setup for your github name and email from terminal:
 
 `git config --global user.name "Your-Name"`
 
-git config --global user.email "youremail@yourdomain.com"`
+`git config --global user.email "youremail@yourdomain.com"`
 
 
 
