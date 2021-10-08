@@ -3,7 +3,8 @@ scripts for the ISO-AUTOMAT
 
 Feel free to help on making them better !
 
-# Pull Requests Are Welcome :wink:
+**Pull Requests Are Welcome :wink:**
+
 
 ## monitor.bash
 
@@ -16,6 +17,7 @@ using variables on top of the script to fetch the info.
 to update the page create a simple systemd timer.
 
 <img src="https://raw.githubusercontent.com/killajoe/ISO-AUTOMAT/main/iso-automat-stat.png" width="450">
+
 
 ## github-repo-backup
 
