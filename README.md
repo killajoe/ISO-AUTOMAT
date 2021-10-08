@@ -7,11 +7,13 @@ Feel free to help on making them better !
 
 # monitor.bash
 
-simply crating a html webside for showing status of the server.
+simply creating a html webside for showing status of the server.
 
-using `echo "${html_page[@]}"` to drop current states into a html files, 
+using `echo "${html_page[@]}"` to drop current states into a html files.
 
 using variables on top of the script to fetch the info.
+
+to update the page create a simple systemd timer.
 
 <img src="https://raw.githubusercontent.com/killajoe/ISO-AUTOMAT/main/iso-automat-stat.png" width="450">
 
