@@ -13,7 +13,7 @@ using `echo "${html_page[@]}"` to drop current states into a html files,
 
 using variables on top of the script to fetch the info.
 
-![iso-automat-stat](https://raw.githubusercontent.com/killajoe/ISO-AUTOMAT/main/iso-automat-stat.png width="200")
+![iso-automat-stat]<img src="https://raw.githubusercontent.com/killajoe/ISO-AUTOMAT/main/iso-automat-stat.png" width="200">
 
 # github-repo-backup
 
