@@ -1,33 +1,125 @@
 #/bin/bash
 
+DIE() {
+    echo "===> $progname: error: $1" >&2
+    exit 1
+}
+
+CloneRepos() {
+    local ix data repos="" repo
+
+    for ((ix=1; ; ix++)) ; do
+        data=$(wget -q -O- https://github.com/orgs/$GHORG/repositories?page=$ix)
+        repo="$(echo "$data" | grep /hovercard | sed 's|.*/\([^/]*\)/hovercard.*|\1|')"
+        [ -n "$repo" ] || break
+        repos+="$repo "
+    done
+    repo=""
+
+    for repo in $repos ; do
+        # skip some unnecessary and large repos
+        case "$repo" in
+            repo | eos-tools | test-fake-stuff | RepoAgent | nvidia-ins*) continue ;;
+        esac
+        echo "==> cloning $repo ..."
+        git clone https://github.com/endeavouros-team/$repo.git || DIE "cloning repo $repo failed."
+    done
+
+    if [ "$delete_dotgit_folders" = "yes" ] ; then
+       rm -rf */.git
+    fi
+
+    echo "$date" >> $targetdir/log.txt
+}
+
+ListFolders() {
+    local xx folders dels=""
+
+    readarray -t folders <<< $(/usr/bin/ls -1)
+    for xx in "${folders[@]}" ; do
+        case "$xx" in
+            20*.[0-9]*.[0-9]*)
+                [ -d "$xx" ] && dels+="$xx " ;;
+        esac
+    done
+    echo "$dels"
+}
+
+Options() {
+    local opts
+
+    opts="$(/usr/bin/getopt -o=h --longoptions help,del-dotgit,keep:,targetdir: --name "$progname" -- "$@")" || {
+        Options -h
+        return 1
+    }
+
+    eval set -- "$opts"
+
+    while true ; do
+        case "$1" in
+            --del-dotgit)
+                delete_dotgit_folders=yes ;;
+            --keep)
+                keep_count="$2" ; shift ;;
+            --targetdir)
+                targetdir="$2" ; shift ;;
+
+            -h | --help)
+                cat <<EOF >&2
+Usage: $progname [options]
+Options:
+  --del-dotgit         Delete .git subfolders from repos to save local space.
+  --keep=X             X = number of latest folders to keep. Default: $keep_count_default
+  --targetdir=X        X = Backups go to this folder. Default: $targetdir_default
+  --help, -h           This help.
+EOF
+                exit 0
+                ;;
+            
+            --) shift ; break ;;
+        esac
+        shift
+    done
+    if [ -n "$1" ] ; then
+        echo "Ignoring parameters: $@" >&2
+    fi
+}
+
 Main() {
+    local progname="$(/usr/bin/basename "$0")"
+
     # Set up for backups
 
+    local targetdir_default=/mnt/backup/github
+    local keep_count_default=2
+
+    local delete_dotgit_folders=no         # if yes, will delete all .git subfolders from repos (to save much space)
+    local keep_count=$keep_count_default   # how many latest folders you want to keep?
+    local targetdir=$targetdir_default     # backups dir (default)
+
     local date=$(date +%Y.%m.%d)           # must not contain spaces inside the date string!
-    local targetdir=/mnt/backup/github
-    if [ ! -d $targetdir ] ; then
-        targetdir=$HOME/github-backup      # a fallback target folder
-    fi
+    local target=""
+    local GHORG=endeavouros-team
+
+    # Handle given options
+    Options "$@"
+
     if [ ! -d $targetdir ] ; then
         echo "Error: target folder '$targetdir' does not exist." >&2
         exit 1
     fi
-    local target=$targetdir/$date
-    local GHORG=endeavouros-team
-
-    mkdir -p $target
-    cd $target
 
     # Create a backup
 
-    curl "https://api.github.com/orgs/$GHORG/repos?per_page=1000" | grep -o 'git@[^"]*' | xargs -L1 git clone
-    echo "$date" >> $targetdir/log.txt
+    target=$targetdir/$date
+    mkdir -p $target
+    cd $target
+    CloneRepos
 
     # Delete older backups
 
     cd $targetdir
-    local keep_count=2                                           # how many latest folders you want to keep?
-    local deletable="$(/usr/bin/ls -1 | head -n -$keep_count)"
+    local deletable="$(ListFolders | head -n -$keep_count)"
     if [ -n "$deletable" ] ; then
         rm -rf $deletable
     fi
